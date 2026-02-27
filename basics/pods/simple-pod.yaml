@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  namespace: demo
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.14.2
+      ports:
+        - containerPort: 80
+      resources:
+        requests: #Cantidad de recursos que se le asignan al contenedor
+          cpu: 100m # 100 millicores
+          memory: "100M" # 128 megabytes
+        limits:
+          cpu: 200m # 200 millicores
+          memory: "200M" # 256 megabytes
