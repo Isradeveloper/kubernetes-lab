@@ -1,0 +1,68 @@
+# 1. EL ESPACIO DE TRABAJO
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx
+
+---
+# 2. EL MAPA DE ENTRADA (INGRESS)
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: nginx-ingress-route
+  namespace: nginx
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`localhost`)
+      services:
+        - name: nginx-service
+          port: 80
+  tls:
+    secretName: nginx-certificate-secret
+---
+# 4. EL PUNTO DE ACCESO INTERNO (SERVICE)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+  namespace: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+# 5. LA APLICACIÓN (DEPLOYMENT)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi

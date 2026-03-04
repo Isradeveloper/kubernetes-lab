@@ -1,0 +1,17 @@
+ports:
+  web:
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+# ingressRoute:
+#   dashboard:
+#     enabled: true
+#     entryPoints: [web, websecure]
+#     matchRule: Host(`traefik.isradeveloper.com`)
+
+
+#* helm install --install traefik traefik/traefik --namespace traefik --create-namespace --values traefik-values.yml
+#* helm upgrade --install traefik traefik/traefik --namespace traefik --create-namespace --values traefik-values.yml
